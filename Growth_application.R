@@ -6,20 +6,18 @@ data("oecdpanel")
 attach(oecdpanel)
 
 data=oecdpanel%>%filter(year==1965)%>%mutate(across(c(growth,initgdp,popgro,inv,humancap),standardizer))
-#data=oecdpanel%>%mutate(across(c(growth,initgdp,popgro,inv,humancap),standardizer))
 attach(data)
-#bw <- npregbw(formula=growth~initgdp+popgro+inv+humancap)
 
 X=cbind(initgdp,popgro,inv,humancap)
 y=growth
 n=nrow(X)
-#h=round(bw$bw,4)
+
 ####
 set.seed(135)
 for(j in 0:1){
 hist(data$growth[oecdpanel$oecd==j & oecdpanel$year==1965],main="",xlab="GDP growth rate per capita")
 }
-#x=standardizer(X);y=standardizer(y)
+
 x=X
 
 fit1=fit2=fit3=fit4=NULL
@@ -45,10 +43,3 @@ classError(data$oecd,ifelse(fit1$resp[,1]>=0.5,1,2))$errorRate
 classError(data$oecd,ifelse(fit2$resp[,1]>=0.5,1,2))$errorRate
 classError(data$oecd,ifelse(fit3$resp[,1]>=0.5,1,2))$errorRate
 classError(data$oecd,ifelse(fit4$resp[,1]>=0.5,1,2))$errorRate
-for(hh in seq(0.5,2,0.1)){
-print(hh)
-h=rep(hh,4)
-fit1=CN_mix_semi_reg(y,x,k=k,bw=h,init.model=init.model0,xgrid=x)
-print(fit1$LL)
-print(fit1$prop)
-}
